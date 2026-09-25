@@ -1,0 +1,27 @@
+// install vagrant
+
+wget -O - https://apt.releases.hashicorp.com/gpg | sudo gpg --dearmor -o /usr/share/keyrings/hashicorp-archive-keyring.gpg
+echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com $(grep -oP '(?<=UBUNTU_CODENAME=).*' /etc/os-release || lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/hashicorp.list
+sudo apt update && sudo apt install vagrant
+
+// libvirt for the nested virtualization inside virtual box
+apt update && apt install -y vagrant-libvirt
+
+
+
+// tell vagrant to check for libvirt not virtual box
+export VAGRANT_DEFAULT_PROVIDER=libvirt
+//maybe also for this
+echo 'export VAGRANT_DEFAULT_PROVIDER=libvirt' >> ~/.bashrc
+
+// install the headers for libvrt
+apt update && apt install -y build-essential libvirt-dev libxml2-dev libxslt1-dev ruby-dev
+// install libvirt via valgrant plugin
+vagrant plugin install vagrant-libvirt
+// install libvirt system daemon client utilities
+apt update && apt install -y libvirt-daemon-system libvirt-clients qemu-system-x86
+
+
+//enable libvirt
+systemctl enable --now libvirt
+
